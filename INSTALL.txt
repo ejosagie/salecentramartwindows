@@ -1,0 +1,32 @@
+INSTALLATION GUIDE — SaleCentra Mart POS
+=========================================
+
+STEP 1: Install Microsoft Visual C++ Redistributable (REQUIRED)
+----------------------------------------------------------------
+Before running SaleCentra Mart, you MUST install the Microsoft Visual
+C++ 2015-2022 Redistributable (x64) - vc_redist.x64.exe.
+
+It is this folder.
+
+- Run vc_redist.x64.exe
+- Follow the installer to complete installation
+- Restart your computer
+
+If you skip this step, you will see an error like
+"VCRUNTIME140.dll not found" when launching the app.
+
+
+STEP 2: Run SaleCentra Mart
+-----------------------------
+1. Open the SaleCentraMart folder
+2. Double-click salecentra_mart.exe to launch
+3. Right-click salecentra_mart.exe > Send to > Desktop (create shortcut)
+   for easy access
+
+NOTE: The app opens in fullscreen mode. Press F11 to toggle fullscreen.
+
+
+SUPPORT
+-------
+WhatsApp: +234 810 111 4535
+Help Center: https://salecentra.com/customer_tickets/
