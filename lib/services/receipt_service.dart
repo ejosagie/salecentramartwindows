@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:window_manager/window_manager.dart';
 import '../models/business.dart';
 
 class ReceiptService {
@@ -124,10 +126,44 @@ class ReceiptService {
       ),
     );
 
-    await Printing.layoutPdf(
-      onLayout: (format) => doc.save(),
-      name: 'Receipt_$receiptNumber',
-    );
+    // Print directly to the default printer so the Windows print dialog
+    // doesn't open behind the fullscreen POS window. Fall back to the
+    // dialog only when no default printer is configured.
+    Printer? printer;
+    try {
+      final printers = await Printing.listPrinters();
+      printer = printers.where((p) => p.isDefault && p.isAvailable).firstOrNull;
+    } catch (_) {
+      printer = null;
+    }
+    if (printer != null) {
+      await Printing.directPrintPdf(
+        printer: printer,
+        onLayout: (format) => doc.save(),
+        name: 'Receipt_$receiptNumber',
+      );
+    } else {
+      // No default printer — show the dialog. Exit fullscreen first so
+      // the dialog appears in front of the POS window, then restore.
+      final isDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
+      if (isDesktop) {
+        try {
+          await windowManager.setFullScreen(false);
+        } catch (_) {}
+      }
+      try {
+        await Printing.layoutPdf(
+          onLayout: (format) => doc.save(),
+          name: 'Receipt_$receiptNumber',
+        );
+      } finally {
+        if (isDesktop) {
+          try {
+            await windowManager.setFullScreen(true);
+          } catch (_) {}
+        }
+      }
+    }
   }
 
   static pw.Widget _row(String label, String value, {bool bold = false}) {

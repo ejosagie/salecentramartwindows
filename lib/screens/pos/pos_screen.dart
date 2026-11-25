@@ -1075,10 +1075,13 @@ class _PosScreenState extends State<PosScreen> {
                       itemBuilder: (ctx, index) {
                         final product = _searchResults[index];
                         return ListTile(
-                          title: Text(product.name),
+                          title: Text(
+                            product.name,
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                          ),
                           subtitle: Text(
                             '$_currencySymbol${product.sellingPrice.toStringAsFixed(2)} · ${product.stockQuantity <= 0 ? 'Out of stock' : 'Stock: ${product.stockQuantity.toStringAsFixed(0)}'}',
-                            style: TextStyle(fontSize: 12, color: product.stockQuantity <= 0 ? AppTheme.error : AppTheme.textMuted),
+                            style: TextStyle(fontSize: 13, color: product.stockQuantity <= 0 ? AppTheme.error : AppTheme.textMuted),
                           ),
                           trailing: const Icon(Icons.add_circle, color: AppTheme.primaryColor),
                           onTap: () {
